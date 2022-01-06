@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Asdb视频片段下载</title>
+        
+        <script>
+            function Parse(){
+                info = {
+                    "url": encodeURI(document.getElementById("url").value),
+                    "start": document.getElementById("start_time").value,
+                    "end": document.getElementById("end_time").value
+                }
+                http = new XMLHttpRequest();
+                http.open("POST", "http://127.0.0.1:8000/api/v1/parse/", true);
+                http.setRequestHeader("Content-type", "application/json");
+                http.send(JSON.stringify(info));
+                http.onreadystatechange = function() {
+                    if (http.readyState == 4 && http.status == 200) {
+                        a = JSON.parse(http.responseText);
+                        document.getElementById("result-cmd").innerText = a.cmd;
+                    }
+                }
+
+            }
+        </script>
+    </head>
+    <body style="text-align: center;">
+        <h1>视频片段下载</h1>
+        <h2>Range Clip Download</h2>
+        <div class="container">
+            Url: <input type="text" id="url" placeholder="http://www.example.com/">
+            Start_Time: <input type="text" id="start_time" placeholder="example 00:00:00/00:00">
+            End_Time: <input type="text" id="end_time" placeholder="example 03:16">
+            <button onclick="Parse()">Parse</button>
+        </div>
+        <div id="result-container">
+            <p style="margin-bottom: 1rem;">Copy this command and run it in terminal:</p>
+            <code id="result-cmd" style="border: 1rem;border-radius: 1%;border-color: black;"></code>
+        </div>
+    </body>
