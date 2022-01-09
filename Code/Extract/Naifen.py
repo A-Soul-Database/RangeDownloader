@@ -5,11 +5,13 @@ def Naifen(url)->dict:
     proxied = True if "proxied" in url else False
     url = url.split("?")[0]+"?raw" if proxied else url.split("?")[0]+"?raw"
     name = url.split("/")[-1].split("?")[0].replace(" ","")
-    return {"args":"",
+    return {
+    "args":"",
     "download_url":url,
     "Play_Html":f"<video class='mdui-video-fluid' src='{url}' controls></video>",
     "Web_Title":title,
-    "Save_Name":name
+    "Save_Name":name,
+    "Download_Tool":"ffmpeg"
     }
 
 '''

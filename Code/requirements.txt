@@ -1,0 +1,4 @@
+wheel
+pywebview
+youtube-dl
+requests

@@ -1,7 +1,7 @@
 from urllib.parse import urlparse, unquote
 import Extract
 Extracts = [
-    "www.bilibili.com","ali.asoul-rec.com","nf.asoul-rec.com" #It should obey the RFC 1808 rule.
+    "www.bilibili.com","ali.asoul-rec.com","nf.asoul-rec.com","www.youtube.com","www.youtu.be" #It should obey the RFC 1808 rule.
 ]
 class Get_Request_Body():
     url:str

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="referrer" content="no-referrer">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Asdb视频片段下载</title>
+        <script src="https://cdn.jsdelivr.net/npm/mdui@1.0.2/dist/js/mdui.min.js"></script>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/mdui@1.0.2/dist/css/mdui.min.css"/>
+    </head>
+    <body class="mdui-typo" >
+        <div class="mdui-appbar">
+            <div class="mdui-toolbar mdui-color-theme">
+              <div href="javascript:;" class="mdui-typo-headline">视频分段下载 🎞</div>
+              <div href="javascript:;" class="mdui-typo-title">By Asdb 🤸‍♀️</div>
+              <div class="mdui-toolbar-spacer"></div>
+            </div>
+          </div>
+          
+          <div id="main" class="mdui-container">
+                <h3 style="margin-top: 5rem;">正在下载必要依赖</h3>
+                <h5 style="float: right;">(约~80Mb)</h5>
+                <div class="mdui-progress"><div class="mdui-progress-determinate" id="progress_bar" style="width: 0%;"></div></div>
+
+          </div>
+          <script>
+              function update_progress(percent) {
+                  progress = document.getElementById("progress_bar");
+                  progress.style.width = percent + '%';
+              }
+              function snackbar(message){
+                mdui.snackbar({
+                    message: message,
+                    position: 'left-bottom',
+                });
+            }
+
+            window.addEventListener('pywebviewready', function() {
+                pywebview.api.download_ffmpeg();
+            });
+          </script>
+    </body>
