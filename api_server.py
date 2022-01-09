@@ -25,10 +25,8 @@ app.add_middleware(
 
 class Get_Request_Body(BaseModel):
     url:str
-    start:str
-    end:str
-    save_path:str=""
 
-@app.post("/api/v1/parse/{info:path}")
+
+@app.post("/api/v1/parse/info")
 async def Parse(args:Get_Request_Body):
     return core.Parse(args)

@@ -7,8 +7,11 @@ import urllib.parse
 def BiliBili(url:str="")->dict:
     bv,p = purify_URL(url)
     return {"args":' -user_agent "User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.182 Safari/537.36" -headers "Referer:https://www.bilibili.com/" ',
-        "url":get_Info(bv,p)["data"]["durl"][0]["url"],
-        "name":bv+".mp4" if p=="1" else bv+"-"+p+".mp4"}
+        "download_url":get_Info(bv,p)["data"]["durl"][0]["url"],
+        "Play_Html":f"<iframe src='http://player.bilibili.com/player.html?bvid={bv}&p={p}' scrolling='no' frameborder='no' width='100%'></iframe>",
+        "Web_Title":"",
+        "Save_Name":bv+".mp4" if p=="1" else bv+"-"+p+".mp4"
+        }
 
 def get_Info(bv,p)->dict:
     #通过bv号和p号获取视频信息
