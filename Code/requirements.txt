@@ -1,4 +1,2 @@
-wheel
-pywebview
-youtube-dl
+fastapi
 requests

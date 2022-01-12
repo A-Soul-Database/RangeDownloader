@@ -1,5 +1,6 @@
 # -*- coding: UTF-8 -*-
 VERSION = 1.0
+from urllib.parse import quote
 import zipfile
 import requests
 import webview
@@ -14,6 +15,11 @@ from threading import Thread
 with subprocess.Popen("whoami",shell=True,stdin=subprocess.PIPE,stdout=subprocess.PIPE,stderr=subprocess.PIPE) as f:
     me = f.stdout.read().decode('utf-8').replace("\r\n","").split("\\")[1]
 Download_path = "C:/Users/"+me+"/Downloads"
+try:
+    subprocess.run(f"mkdir {Download_path}")
+except:
+    pass
+
 
 Parse = {}
 Download_Threads = []
@@ -54,15 +60,20 @@ def single_download(strat_time:str,end_time:str):
         return window.evaluate_js(f"alert('下载完成')")
         '''
     else:
-        cmd = f'ffmpeg {Parse["args"]} -ss {start} -i "{Parse["download_url"]}"  -to {end-start} -c copy -y "{Download_path}/{Parse["Save_Name"]}"' if start > 0 else f'ffmpeg {Parse["args"]} -i "{Parse["download_url"]}" -to {end} -c copy -y "{Download_path}/{Parse["Save_Name"]}"  2>&1'
+        save_path_name = f'{Download_path}/{Parse["Save_Name"]}_{start}_{end}_.{Parse["video_format"]}'
+        cmd = f'ffmpeg {Parse["args"]} -ss {start} -i "{Parse["download_url"]}"  -to {end-start} -c copy -y "{save_path_name}" 2>&1' if start > 0 else f'ffmpeg {Parse["args"]} -i "{Parse["download_url"]}" -to {end} -c copy -y "{save_path_name}"  2>&1'
+    print(cmd)
     p = subprocess.Popen(cmd,shell=True,stdin=subprocess.PIPE,stdout=subprocess.PIPE,stderr=subprocess.STDOUT,bufsize=0,universal_newlines=True)
     while p.poll() is None:
         Logger(p.stdout.readline())
-        progress = to_second(p.stdout.readline().split("time=")[1].split(".")[0])/(end-start)*100 if "time=" in p.stdout.readline() else 0
-        window.evaluate_js(f"progress('{str(progress)}')")
+        try:
+            progress = to_second(p.stdout.readline().split("time=")[1].split(".")[0])/(end-start)*100 if "time=" in p.stdout.readline() else 0
+            window.evaluate_js(f"progress('{str(progress)}')")
+        except:
+            pass
     window.evaluate_js(f"progress('{str(100)}')")
 
-    window.evaluate_js(f"snackbar('下载完成 {Download_path}/{Parse['Save_Name']} ')")
+    window.evaluate_js(f"snackbar('下载完成 {save_path_name} ')")
     return True
 
 def Logger(info):
@@ -78,7 +89,8 @@ class Api():
         info = Get_Request_Body
         info.url= args["url"]
         Parse = core.Parse(info)
-        cmd = str(base64.b64encode(str(Parse["Play_Html"]+"\n"+Parse["Web_Title"]).encode('utf-8')),'utf-8')
+        print(Parse)
+        cmd = str(base64.b64encode(str(Parse["Play_Html"]+"\n"+quote(Parse["Web_Title"])).encode('utf-8')),'utf-8') #怕有中文
         window.evaluate_js(f"get_parsed('{cmd}')")
         #把解析好的扔回去 因为包含单双引号,先base64一下
 
