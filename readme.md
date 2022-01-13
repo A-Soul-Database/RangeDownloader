@@ -15,12 +15,18 @@ RangeDownloader 通过组合 `ffmpeg` 命令让用户可以**只下载某个片�
 
 </details>
 
+## 已知问题
+由于mp4 的 track问题,ffmpeg在分割前几秒有几率发生**花屏**现象导致素材不可用
+解决方法
+1. 调整设置中的 *多线程下载阈值* 大于你所需要下载的时间
+2. 提前并推后2~3秒的时长
+
 ## 已经测试支持的网站
-- BiliBili (默认清晰度为1080P)
+- BiliBili (账号所能达到的最高清晰度)
 - `asoul-rec.com`
 
 ## 编译/源码使用
-需要注意的是,`pywebview` 需要借助`pythonnet`调用`.Net`,但是`pythinnet`的wheel目前最高只支持**Python38**,除非自己编译
+
 
 ## 贡献
 `Extract/`文件夹已经包含了两个网站的实现方式,按照`Extract/AddWeb.md`进行规范开发即可.
@@ -32,8 +38,9 @@ RangeDownloader 通过组合 `ffmpeg` 命令让用户可以**只下载某个片�
 - Srt Cut
 - Local File
 
-process打包问题
-ffmpeg检测
+- BiliBili cookie bind
+- setting interface
+- use card item
 
 ## License & Libs
 [GPL V3.0 License]()  

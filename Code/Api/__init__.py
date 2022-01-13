@@ -1,11 +1,12 @@
 from urllib.parse import  unquote
-import Parser as Ps
+from . import Parser as Ps
 
 ##### Fast Api Config #####
 from fastapi import FastAPI
+from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
 Api = FastAPI()
-origins = ["https://livedb.asoulfan.com","http://localhost"]
+origins = ["https://livedb.asoulfan.com","http://localhost","*"]
 Api.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
@@ -19,6 +20,9 @@ Extracts = [
     "bilibili.com","asoul-rec.com","youtube.com","youtu.be"
 ]
 
+class Parse_Model(BaseModel):
+    url:str
+
 class Parse_Template():
     Url:str
     Args:str=""
@@ -28,13 +32,19 @@ class Parse_Template():
     Save_Name:str
     Video_Format:str="mp4"
     Download_Tool:str="ffmpeg"
-
 A = Parse_Template()
 
-@Api.get("/Parse/{url:path}")
-def Parse(url:str)->Parse_Template:
+@Api.get("/ping")
+def ping():
+    return "Parse_Api pong"
+
+
+@Api.post("/Parse")
+def Parse(Parse_Model_Url:Parse_Model)->Parse_Template:
+    url = Parse_Model_Url.url
     global A
     A.Url = url
+    print(url)
 
     Special = False
     for item in Extracts:
