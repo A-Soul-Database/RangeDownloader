@@ -61,3 +61,11 @@ def Parse(Parse_Model_Url:Parse_Model)->Parse_Template:
     A.Play_Html = unquote(A.Play_Html)
     A.Save_Name = unquote(A.Save_Name)
     return A
+
+@Api.get("/Save_BiliBili_Cookie")
+def Save_BiliBili_Cookie(Cookie:str):
+    return Ps.Save_BiliBili_Cookie(Cookie)
+
+@Api.get("/Get_BiliBili_Cookie")
+def Get_BiliBili_Cookie():
+    return Ps.Get_BiliBili_Cookie()

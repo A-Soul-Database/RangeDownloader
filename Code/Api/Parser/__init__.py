@@ -12,3 +12,9 @@ def Parse(url):
         return YouTube.YouTube(url)
     else:
         return None
+
+def Save_BiliBili_Cookie():
+    return BiliBili.Save_BiliBili_Cookie()
+
+def Get_BiliBili_Cookie():
+    return BiliBili.Get_BiliBili_Cookie()

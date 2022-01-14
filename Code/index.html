@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="referrer" content="no-referrer">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Asdb视频片段下载</title>
+        <script src="https://cdn.jsdelivr.net/npm/mdui@1.0.2/dist/js/mdui.min.js"></script>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/mdui@1.0.2/dist/css/mdui.min.css"/>
+        <script src="./global.js"></script>
+    </head>
+    <body class="mdui-theme-layout-auto" onload="init()">
+        <div class="mdui-appbar">
+            <div class="mdui-toolbar mdui-color-theme">
+              <div href="javascript:;" class="mdui-typo-headline">视频分段下载 🎞</div>
+              <div href="javascript:;" class="mdui-typo-title">By Asdb <span onclick="snackbar('6I2JLOi1sCzlv73nlaU=')">🤸‍♀️</span></div>
+              <div class="mdui-toolbar-spacer"></div>
+              <a href="javascript:;" class="mdui-btn mdui-btn-icon mdui-ripple" mdui-tooltip="{content: '下载列表'}" onclick="get_download_info()">
+                <i class="mdui-icon material-icons">arrow_downward</i>
+              </a>
+              <a href="javascript:;" class="mdui-btn mdui-btn-icon mdui-ripple" mdui-tooltip="{content: '设定'}" onclick="Setting()">
+                <i class="mdui-icon material-icons">settings</i>
+              </a>
+            </div>
+        </div>
+    <div  style="text-align: center;" class="mdui-typo">
+        <div id="ffmpeg-page" class="web-container mdui-container" style="width: 80%;margin: auto;margin-top: 2rem;left: 0;right: 0;top: 0;bottom: 0;display: none;">
+            <h3 style="margin-top: 5rem;">正在下载必要依赖</h3>
+            <h5 style="float: right;">(约~80Mb)</h5>
+            <div class="mdui-progress"><div class="mdui-progress-determinate" id="progress_bar" style="width: 0%;"></div></div>
+        </div>
+
+        <div id="main-page" class="web-container mdui-container" style="width: 80%;margin: auto;margin-top: 2rem;left: 0;right: 0;top: 0;bottom: 0;display: block;">
+            <div class="web-container mdui-container" style="width: 80%;margin: auto;margin-top: 2rem;left: 0;right: 0;top: 0;bottom: 0;">
+                <div class="mdui-textfield" style="font-weight:500;">
+                    <input class="mdui-textfield-input" type="text" id="url" placeholder="E.g. https://www.bilibili.com/video/BV1GZ4y1S7uV"/>
+                </div>
+                <button class="mdui-btn mdui-btn-icon mdui-color-theme-accent mdui-ripple" mdui-tooltip="{content: '解析'}" onclick="apply_parse()" style="float: right;">
+                    <i class="mdui-icon material-icons">search</i> 
+                </button>
+            </div>
+            
+            <div id="step2-container"class="mdui-container-flui" style="margin: auto;display: none;margin-top: 2rem;width: 80%;">
+                <p><h5 id="video_title"></h5></p>
+                <div id="left-outer-player"  class="mdui-video-container" style="margin-top: 1rem"></div>
+
+                <div id="right-time-chooser" style="float: right;width: 40%;">
+                    <div class="mdui-textfield">
+                        <p style="font-weight: 300;float: left;">开始时间</p>
+                        <input class="mdui-textfield-input" type="text" id="start-time" placeholder="例:00:00:30/00:30/30"/>
+                    </div>
+                    
+                    <div class="mdui-textfield">
+                        <p style="font-weight: 300;float: left;">结束时间</p>
+                        <input class="mdui-textfield-input" type="text" id="end-time" placeholder="例:00:01:00/01:00/60"/>
+                    </div>
+                </div>
+                <div id="left-logger" style="float: left;width: 40%;margin-top: 5rem;">
+                    <div class="mdui-chip" onclick="get_video_player_current_time()"><span class="mdui-chip-title">选取当前时间</span></div>
+                    <div style="display: none;"><div class="mdui-progress"><div class="mdui-progress-determinate" id="download_progress" style="width: 0%;"></div></div></div>
+                    <div class="mdui-container" id="logs" style="margin-top: 2rem;"></div>
+                </div>
+                <button class="mdui-fab mdui-ripple mdui-fab-fixed" onclick="apply_download()" mdui-tooltip="{content: '下载'}">
+                    <i class="mdui-icon material-icons">file_download</i>
+                </button>
+            </div>
+        </div>
+        
+    </div>
+        
+        <div class="mdui-dialog" id="global_dialog"></div>
+
+        <div class="mdui-dialog" id="Download-List-dialog" style="min-height: 15rem;">
+            <div class="mdui-dialog-content">
+                <ul class="mdui-list" id="Download-List-Content">
+                    此处招商<p>@A-Soul Official</p>还没有任何下载任务捏
+                </ul>
+            </div>
+            <div class="mdui-dialog-actions">
+                <button class="mdui-btn mdui-ripple" mdui-dialog-close>关闭</button>
+            </div>
+        </div>
+
+        <div class="mdui-dialog" id="Setting_Dialog"><div class="mdui-dialog-content">
+            <ul class="mdui-list">
+
+                <li class="mdui-list-item mdui-ripple">
+                    <i class="mdui-icon material-icons">playlist_play</i>
+                  <div class="mdui-list-item-content">多线程加载</div>
+                  <label class="mdui-switch">
+                    <input type="checkbox" id="Multi_Thread_Switch" checked/>
+                    <i class="mdui-switch-icon"></i>
+                  </label>
+                </li>
+                <div class="mdui-typo-caption-opacity">ffmpeg的下载方式与其他下载软件不同,属于流式+Seek模式加载.但是由于Mp4的格式原因,Stco不能通过秒数完全分割,<b>会导致在开始前几秒和线程连接处出现花屏等情况</b><br>
+                    建议对于小时间段视频可以不用启用该功能</div>
+                <div class="mdui-textfield">
+                    <input type="text" class="mdui-textfield-input" id="Thread_Num" placeholder="线程数"/>
+                    <div class="mdui-textfield-helper">默认4线程</div>
+                </div>
+
+
+                <div class="mdui-textfield">
+                    <input type="text" class="mdui-textfield-input" id="ffmpeg_api" placeholder="本地ffmpeg地址"/>
+                    <div class="mdui-textfield-helper">默认<code>http://localhost:4399</code></div>
+                </div>
+                
+                <div class="mdui-textfield">
+                    <input type="text" class="mdui-textfield-input" id="Parse_api" placeholder="本地解析地址"/>
+                    <div class="mdui-textfield-helper">默认<code>http://localhost:4400</code></div>
+                </div> 
+
+
+
+                <div class="mdui-textfield">
+                    <textarea class="mdui-textfield-input" placeholder="BiliBili_Cookie" id="BiliBili_Cookie"></textarea>
+                    <div class="mdui-typo-caption-opacity">如果你是大会员,并且希望下载更高清的源(例如4K/1080P高码率),则需要绑定你的B站Cookie.<br>你的Cookie将会保存在本地,Asdb保证不会上传任何信息.并开放源代码接受监督.</div>
+                </div>
+
+              </ul>
+            <div class="mdui-dialog-actions">
+                <button class="mdui-btn mdui-ripple" mdui-dialog-cancel>放弃</button>
+                <button class="mdui-btn mdui-ripple" mdui-dialog-confirm onclick="save_setting_param()">保存</button>
+            </div>
+        </div></div>
+
+        <script>
+
+            const global_dialog = new mdui.Dialog('#global_dialog');
+            const Setting_Dialog = new mdui.Dialog('#Setting_Dialog');
+            const Download_List_Dialog = new mdui.Dialog('#Download-List-dialog');
+            var Parse;
+            var Download_Progress;
+            var Finished_List = [];
+            const Config = {
+                ffmpeg_api:"http://localhost:4399",
+                Parse_api:"http://localhost:4400",
+                Thread_Num:4,
+                BiliBili_Cookie:"",
+                Multi_Thread_Switch:true,
+            };
+            setInterval(() => {
+                if(Download_List_Dialog.state==="opened"){get_download_info();}
+            }, 1000);
+            setInterval(async()=>{
+                if(!await heartbeat()){
+                    snackbar("本地服务连接失败，请检查服务是否正常启动");
+                    Setting();
+                }
+            },10000)
+
+        </script>
+    </body>
