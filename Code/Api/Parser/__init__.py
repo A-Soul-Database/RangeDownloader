@@ -13,8 +13,8 @@ def Parse(url):
     else:
         return None
 
-def Save_BiliBili_Cookie():
-    return BiliBili.Save_BiliBili_Cookie()
+def Save_BiliBili_Cookie(Cookie:str):
+    return BiliBili.Save_BiliBili_Cookie(Cookie)
 
 def Get_BiliBili_Cookie():
     return BiliBili.Get_BiliBili_Cookie()

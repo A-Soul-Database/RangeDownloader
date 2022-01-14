@@ -15,6 +15,7 @@
               <div href="javascript:;" class="mdui-typo-headline">视频分段下载 🎞</div>
               <div href="javascript:;" class="mdui-typo-title">By Asdb <span onclick="snackbar('6I2JLOi1sCzlv73nlaU=')">🤸‍♀️</span></div>
               <div class="mdui-toolbar-spacer"></div>
+                <img class="mdui-img-circle mdui-btn mdui-btn-icon mdui-ripple" mdui-tooltip="{content: '阿草模式'}" src="acao.png" onclick="Acao_Mode()">
               <a href="javascript:;" class="mdui-btn mdui-btn-icon mdui-ripple" mdui-tooltip="{content: '下载列表'}" onclick="get_download_info()">
                 <i class="mdui-icon material-icons">arrow_downward</i>
               </a>
@@ -70,6 +71,14 @@
         
         <div class="mdui-dialog" id="global_dialog"></div>
 
+        <div class="mdui-dialog" id="A_cao_dialog">
+            <div class="mdui-dialog-title">阿草啊,你又在挖矿</div>
+            <div class="mdui-dialog-content">休息一下,发个切片好不好</div>
+            <div class="mdui-dialog-actions">
+                <button class="mdui-btn mdui-ripple" mdui-dialog-cancel onclick="snackbar('才讲你两句你就说我烦');snackbar('阿嫲只希望你能认真切片')">烦内</button>
+            </div>
+        </div>
+
         <div class="mdui-dialog" id="Download-List-dialog" style="min-height: 15rem;">
             <div class="mdui-dialog-content">
                 <ul class="mdui-list" id="Download-List-Content">
@@ -114,7 +123,7 @@
 
                 <div class="mdui-textfield">
                     <textarea class="mdui-textfield-input" placeholder="BiliBili_Cookie" id="BiliBili_Cookie"></textarea>
-                    <div class="mdui-typo-caption-opacity">如果你是大会员,并且希望下载更高清的源(例如4K/1080P高码率),则需要绑定你的B站Cookie.<br>你的Cookie将会保存在本地,Asdb保证不会上传任何信息.并开放源代码接受监督.</div>
+                    <div class="mdui-typo-caption-opacity">如果你是大会员,并且希望下载更高清的源(例如4K/1080P高码率),则需要绑定你的B站Cookie.<br>你的Cookie将会保存在本地,Asdb保证不会上传任何信息.并开放源代码接受监督.<br>Copyright 2022. Asdb.live</div>
                 </div>
 
               </ul>

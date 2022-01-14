@@ -24,9 +24,9 @@ def Multi_Thread_Seeking(Start_Time:int,End_Time:int,Url:str,Save_Name:str,Seek_
         for i in range(Threads):
             end_time = start_time + Each_Duration
             if Seek_type.lower()=="input":
-                cmd =f'ffmpeg -y {Args} -i "{Url}" -to {end_time} -c copy {i}_{Uniq_ID}.mp4 2>&1' if start_time==0 else f'ffmpeg -y {Args} -ss {start_time} -i "{Url}" -to {end_time-start_time} -c copy {i}_{Uniq_ID}.mp4 2>&1'
+                cmd =f'ffmpeg  {Args} -i "{Url}" -to {end_time} -c copy {i}_{Uniq_ID}.mp4 -y 2>&1' if start_time==0 else f'ffmpeg  {Args} -ss {start_time} -i "{Url}" -to {end_time-start_time} -c copy {i}_{Uniq_ID}.mp4 -y 2>&1'
             elif Seek_type.lower() == "output":
-                cmd = f'ffmpeg -y {Args} -i "{Url}" -to {end_time} -c copy {i}_{Uniq_ID}.mp4 2>&1' if start_time==0 else f'ffmpeg -y {Args} -ss {start_time} -i "{Url}" -to {end_time} -c copy {i}_{Uniq_ID}.mp4 2>&1'
+                cmd = f'ffmpeg  {Args} -i "{Url}" -to {end_time} -c copy {i}_{Uniq_ID}.mp4 -y 2>&1' if start_time==0 else f'ffmpeg  {Args} -ss {start_time} -i "{Url}" -to {end_time} -c copy {i}_{Uniq_ID}.mp4 -y 2>&1'
             Commands.append(cmd)
             start_time = end_time
         # Run Commands

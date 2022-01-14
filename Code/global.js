@@ -16,6 +16,27 @@ function snackbar(message){
     });
 }
 
+async function Advanced_Fetch(url){
+    ms=100;
+    let controller = new AbortController();
+    let signal = controller.signal;
+    let timeout_Promise = (timeout)=>{
+        return new Promise((resolve,reject)=>{
+            setTimeout(()=>{
+                resolve(new Response(false,{status:408}));
+                controller.abort();
+            },timeout)
+        })
+    }
+    let request_Promise = (target) => {
+        return fetch(target,{
+            signal:signal
+        });
+    };
+    const response = await Promise.race([timeout_Promise(ms),request_Promise(url)])
+    return response.ok;
+}
+
 async function init(){
     snackbar("尝试链接本地服务...");
     var status = await heartbeat();
@@ -39,12 +60,13 @@ async function init(){
     snackbar("服务正常");
     //read config from cookie
     if(getCookie("Config")){Config = JSON.parse(getCookie("Config"))}
+    get_bilibili_cookie();
 }
 
 async function heartbeat(){
-    const ffmpeg = await fetch(Config.ffmpeg_api+"/ping");
-    const parse = await fetch(Config.Parse_api+"/ping");
-    return ffmpeg.status && parse.status === 200 ? true : false;
+    const ffmpeg = await Advanced_Fetch(Config.ffmpeg_api+"/ping");
+    const parse = await Advanced_Fetch(Config.Parse_api+"/ping");
+    return (ffmpeg && parse);
 }
 
 function combine_download_item(Uniq_Id){
@@ -193,8 +215,24 @@ function save_setting_param(){
     Config.Multi_Thread_Switch = document.getElementById("Multi_Thread_Switch").checked;
     //Save to cookie
     document.cookie = Setcookie("Config",JSON.stringify(Config));
+    save_bilibili_cookie(Config.BiliBili_Cookie);
     snackbar("已保存");
 }
+
+function save_bilibili_cookie(cookie){
+    fetch(`${Config.Parse_api}/Save_BiliBili_Cookie?Cookie=${cookie}`)
+}
+function get_bilibili_cookie(){
+    fetch(`${Config.Parse_api}/Get_BiliBili_Cookie`)
+    .then(responese=>responese.json())
+    .then(function(data){
+        if(data!=""){
+            Config.BiliBili_Cookie = data;
+            document.getElementById("BiliBili_Cookie").value = data;
+        }
+    })
+}
+
 function Setting(){
     document.getElementById('ffmpeg_api').value = Config.ffmpeg_api;
     document.getElementById('Parse_api').value = Config.Parse_api;
@@ -220,3 +258,7 @@ function get_download_info(){
     })
 }
 
+function Acao_Mode(){
+    const acao = new mdui.Dialog("#A_cao_dialog");
+    acao.open()
+}

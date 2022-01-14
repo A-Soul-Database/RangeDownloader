@@ -37,10 +37,10 @@ def get_Info(bv,p,sessdata:str="")->dict:
     }
     Bili_Video_Info_Json = requests.get(f"https://api.bilibili.com/x/web-interface/view?bvid={bv}",headers=headers,cookies=Cookie).json()
     cid = Bili_Video_Info_Json["data"]["pages"][int(p)-1]["cid"]
-    A.Download_Url = requests.get(f'https://api.bilibili.com/x/player/playurl?bvid={bv}&cid={cid}&otype=json&fourk=1&qn=120',headers=headers,cookies=Cookie).json()["data"]["durl"][0]["url"]
     A.Web_Title = Bili_Video_Info_Json["data"]["title"]
     Play_Html= requests.get(f"https://api.bilibili.com/x/player/playurl?bvid={bv}&cid={cid}&otype=json&&platform=html5&high_quality=1",headers=headers,cookies=Cookie).json()["data"]["durl"][0]["url"]
     A.Play_Html = f"<video class='mdui-video-fluid' src='{Play_Html}' controls></video>"
+    A.Download_Url =  Play_Html if sessdata =="" else requests.get(f'https://api.bilibili.com/x/player/playurl?bvid={bv}&cid={cid}&otype=json&fourk=1&qn=120',headers=headers,cookies=Cookie).json()["data"]["durl"][0]["url"]
 
 def purify_URL(url:str)->str:
     #提取bv号和p号
