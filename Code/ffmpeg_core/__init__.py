@@ -52,3 +52,7 @@ def e(Uniq_ID:str,Instance_id:int,Running:int):
 @FFmpeg_api.get("/Open_Folder")
 def open_folder(Save_Name:str=""):
     os.system(f"explorer {os.getcwd()}")
+
+@FFmpeg_api.get("/Install_Progress")
+def f():
+    return Installation.Get_Progress()

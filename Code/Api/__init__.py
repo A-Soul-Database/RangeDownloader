@@ -44,8 +44,6 @@ def Parse(Parse_Model_Url:Parse_Model)->Parse_Template:
     url = Parse_Model_Url.url
     global A
     A.Url = url
-    print(url)
-
     Special = False
     for item in Extracts:
         if item in url:

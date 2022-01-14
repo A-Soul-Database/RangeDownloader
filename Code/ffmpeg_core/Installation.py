@@ -1,4 +1,4 @@
-
+# *-* coding:utf-8 -*-
 import subprocess
 import requests
 from contextlib import closing
@@ -35,3 +35,6 @@ def Detect_FFmpeg():
         return True
     except:
         return False
+
+def Get_Progress():
+    return {"Install_Stage":Install_Stage,"Download_Progress":Download_Progress}

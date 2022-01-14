@@ -1,3 +1,5 @@
+var A_Cao = false;
+
 function dialog(operation,html){
     /*
         show/hide a dialog
@@ -15,9 +17,28 @@ function snackbar(message){
         position: 'left-bottom',
     });
 }
-
+function Install_FFmpeg(){
+    fetch(`${Config.ffmpeg_api}/Install_FFmpeg`)
+    let progress = setInterval(function(){
+        fetch(`${Config.ffmpeg_api}/Install_Progress`)
+        .then(responese=>{
+            responese.json().then(function(data){
+                if(data){
+                    console.log(data)
+                    document.getElementById('progress_bar').style.width = data.Download_Progress + "%";
+                    if (data.Install_Stage===2){
+                        clearInterval(progress);
+                        document.getElementById("ffmpeg-page").style.display = "none";
+                        document.getElementById("main-page").style.display = "block";
+                        snackbar("FFmpeg 安装完成");
+                    }
+                }
+            });
+        })
+    },1000)
+}
 async function Advanced_Fetch(url){
-    ms=100;
+    ms=1000;
     let controller = new AbortController();
     let signal = controller.signal;
     let timeout_Promise = (timeout)=>{
@@ -51,9 +72,10 @@ async function init(){
         //Get Bool Json
         response.json().then(function(data){
             if(data===false){
-                snackbar("ffmpeg is not installed");
+                snackbar("FFmpeg 没有安装");
                 document.getElementById("main-page").style.display = "none";
                 document.getElementById("ffmpeg-page").style.display = "block";
+                Install_FFmpeg();
             }
         });
     });
@@ -185,7 +207,8 @@ function apply_download(){
             "End_Time": end_time,
             "Save_Name": `${Parse.Save_Name}_${start_time}_${end_time}`,
             "Threads":Config.Thread_Num,
-            "Args":Parse.Args
+            "Args":Parse.Args,
+            "Seek_type":"Input"
         })
     })
     snackbar('已添加至下载队列中');
@@ -197,7 +220,6 @@ function get_video_player_current_time(){
     snackbar("已经复制到剪贴板")
 }
 function logger(info){
-    info = window.atob(info);
     document.getElementById("logs").innerHTML = info;
 }
 function progress(intt){
@@ -244,7 +266,6 @@ function Setting(){
 }
 
 function get_download_info(){
-    Download_List_Dialog.open();
     var Download_List_Html = "";
     fetch(`${Config.ffmpeg_api}/Progress`).then(function(response){
         response.json().then(function(data){

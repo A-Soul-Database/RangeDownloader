@@ -1,3 +1,4 @@
+# *-* coding:utf-8 -*-
 import webbrowser
 import uvicorn
 import Api
@@ -11,7 +12,8 @@ t1 = Thread(target=uvicorn.run,kwargs=({"app":ffmpeg_core.FFmpeg_api,"port":4399
 t2 = Thread(target=uvicorn.run,kwargs=({"app":Api.Api,"port":4400,"debug":True}),daemon=True)
 t1.start()
 t2.start()
-#webbrowser.open("http://localhost/Webs")
+webbrowser.open("https://livedb.asoulfan.com/rangeDownload/index.html")
+print("Service Started")
 while True:
     try:
         time.sleep(2)
