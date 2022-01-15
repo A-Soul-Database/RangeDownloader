@@ -191,11 +191,22 @@ function get_parsed(info){
     document.getElementById("step2-container").style.display = "block";
     dialog(0);
 }
-
+function to_second_time(time){
+    time.replace(/：/g, ":");
+    let a = time.split(":");
+    switch(a.length-1){
+        case 0:
+            return parseInt(time);
+        case 1:
+            return parseInt(a[0])*60 + parseInt(a[1]);
+        case 2:
+            return parseInt(a[0])*3600 + parseInt(a[1])*60 + parseInt(a[2]);
+    }
+}
 function apply_download(){
     console.log(Parse)
-    start_time = document.getElementById("start-time").value;
-    end_time = document.getElementById("end-time").value;
+    start_time = to_second_time(document.getElementById("start-time").value);
+    end_time = to_second_time(document.getElementById("end-time").value);
     fetch(`${Config.ffmpeg_api}/Seek`,{
         method : "POST",
         headers :{
