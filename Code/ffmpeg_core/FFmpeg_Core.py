@@ -24,9 +24,9 @@ def Multi_Thread_Seeking(Start_Time:int,End_Time:int,Url:str,Save_Name:str,Seek_
         for i in range(Threads):
             end_time = start_time + Each_Duration
             if Seek_type.lower()=="input":
-                cmd =f'ffmpeg  {Args} -i "{Url}" -to {end_time} -c copy "{i}_{Uniq_ID}.mp4" -y 2>&1' if start_time==0 else f'ffmpeg  {Args} -ss {start_time} -i "{Url}" -to {end_time-start_time} -c copy "{i}_{Uniq_ID}.mp4" -y 2>&1'
+                cmd =f'ffmpeg  {Args} -i "{Url}" -to {end_time} -avoid_negative_ts 1 -c copy "{i}_{Uniq_ID}.mp4" -y 2>&1' if start_time==0 else f'ffmpeg  {Args} -ss {start_time} -i "{Url}" -to {end_time-start_time} -avoid_negative_ts 1 -c copy "{i}_{Uniq_ID}.mp4" -y 2>&1'
             elif Seek_type.lower() == "output":
-                cmd = f'ffmpeg  {Args} -i "{Url}" -to {end_time} -c copy "{i}_{Uniq_ID}.mp4" -y 2>&1' if start_time==0 else f'ffmpeg  {Args} -ss {start_time} -i "{Url}" -to {end_time} -c copy "{i}_{Uniq_ID}.mp4" -y 2>&1'
+                cmd = f'ffmpeg  {Args} -i "{Url}" -to {end_time} -avoid_negative_ts 1 -c copy "{i}_{Uniq_ID}.mp4" -y 2>&1' if start_time==0 else f'ffmpeg  {Args} -ss {start_time} -i "{Url}" -to {end_time} -avoid_negative_ts 1 -c copy "{i}_{Uniq_ID}.mp4" -y 2>&1'
             Commands.append(cmd)
             start_time = end_time
         # Run Commands
@@ -47,11 +47,11 @@ def Multi_Thread_Seeking(Start_Time:int,End_Time:int,Url:str,Save_Name:str,Seek_
             if Progress[Uniq_ID][0]["Running"]!=4:
                 open(f"{Uniq_ID}.txt","w",encoding="utf-8").write("\n".join([f"file '{i}_{Uniq_ID}.mp4'" for i in range(Threads)]))
                 subprocess.call(f'ffmpeg -f concat -i {Uniq_ID}.txt -c copy "{Save_Name}.mp4"',shell=True)
-                #os.remove(f"{Uniq_ID}.txt")
+                os.remove(f"{Uniq_ID}.txt")
             # Delete Files
             for i in range(Threads):
                 pass
-                #os.remove(f"{i}_{Uniq_ID}.mp4")
+                os.remove(f"{i}_{Uniq_ID}.mp4")
         elif Threads ==1 :
             os.rename(f"0_{Uniq_ID}.mp4",f"{Save_Name}.mp4")
         return True

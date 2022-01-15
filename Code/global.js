@@ -80,6 +80,17 @@ async function init(){
         });
     });
     snackbar("服务正常");
+
+    //检查更新
+    if(await (await (await fetch(`${Config.ffmpeg_api}/version`)).text()).replace(/"/g,"") !== latest_version.ffmpeg || await (await (await fetch(`${Config.Parse_api}/version`)).text()).replace(/"/g,"") !== latest_version.parse){
+        mdui.snackbar({
+            message:"有新版本捏",
+            buttonText:"更新",
+            onClick:function(){
+                window.open(latest_version.url);
+            },
+        });
+    }
     //read config from cookie
     if(getCookie("Config")){Config = JSON.parse(getCookie("Config"))}
     get_bilibili_cookie();
@@ -207,6 +218,17 @@ function apply_download(){
     console.log(Parse)
     start_time = to_second_time(document.getElementById("start-time").value);
     end_time = to_second_time(document.getElementById("end-time").value);
+    if (end_time < start_time){
+        return snackbar("结束时间不能小于开始时间");
+    }
+    if (start_time < 0 || end_time < 0){
+        return snackbar("时间不能小于0");
+    }
+    if(end_time-start_time<120){
+        thread_num = 1;
+    }else{
+        thread_num = Config.Thread_Num;
+    }
     fetch(`${Config.ffmpeg_api}/Seek`,{
         method : "POST",
         headers :{
@@ -217,7 +239,7 @@ function apply_download(){
             "Start_Time": start_time,
             "End_Time": end_time,
             "Save_Name": `${Parse.Save_Name}_${start_time}_${end_time}`,
-            "Threads":Config.Thread_Num,
+            "Threads":thread_num,
             "Args":Parse.Args,
             "Seek_type":"Input"
         })

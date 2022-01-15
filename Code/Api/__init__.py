@@ -67,3 +67,7 @@ def Save_BiliBili_Cookie(Cookie:str):
 @Api.get("/Get_BiliBili_Cookie")
 def Get_BiliBili_Cookie():
     return Ps.Get_BiliBili_Cookie()
+
+@Api.get('/version')
+def version():
+    return "v1.4"

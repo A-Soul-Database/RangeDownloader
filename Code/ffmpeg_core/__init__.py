@@ -56,3 +56,7 @@ def open_folder(Save_Name:str=""):
 @FFmpeg_api.get("/Install_Progress")
 def f():
     return Installation.Get_Progress()
+
+@FFmpeg_api.get("/version")
+def g():
+    return "v1.4"
