@@ -6,7 +6,7 @@ from . import YouTube as YouTube
 def Parse(url):
     if "bilibili.com" in url:
         return BiliBili.BiliBili(url)
-    elif "asoul-rec.com" in url or "knaifen.workers.dev" in url:
+    elif ("asoul-rec.com" in url) or ("knaifen.workers.dev" in url):
         return Naifen.Naifen(url)
     elif "youtube.com" or "youtu.be" in url:
         return YouTube.YouTube(url)

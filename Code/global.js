@@ -84,8 +84,8 @@ async function init(){
     //检查更新
     if(await (await (await fetch(`${Config.ffmpeg_api}/version`)).text()).replace(/"/g,"") !== latest_version.ffmpeg || await (await (await fetch(`${Config.Parse_api}/version`)).text()).replace(/"/g,"") !== latest_version.parse){
         mdui.snackbar({
-            message:"有新版本捏",
-            buttonText:"更新",
+            message:"有新版本捏,点此更新",
+            buttonText:"忽略",
             onClick:function(){
                 window.open(latest_version.url);
             },

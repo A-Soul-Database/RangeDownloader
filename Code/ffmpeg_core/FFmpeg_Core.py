@@ -13,7 +13,7 @@ def Multi_Thread_Seeking(Start_Time:int,End_Time:int,Url:str,Save_Name:str,Seek_
     #   http://trac.ffmpeg.org/wiki/Seeking \n
     #   In the documentation, the following is the format of the seek command:
     #       Input\Output
-    Save_Name = shlex.quote(Save_Name)
+    Save_Name = shlex.quote(Save_Name) # Issue3
     Uniq_ID = str(hash(Url)) # Generate a id ,To Prevent File Overwrite
     Progress.update({Uniq_ID:{}})
     Progress[Uniq_ID]["Save_Name"] = Save_Name
