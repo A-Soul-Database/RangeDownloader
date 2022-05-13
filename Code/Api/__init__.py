@@ -70,4 +70,4 @@ def Get_BiliBili_Cookie():
 
 @Api.get('/version')
 def version():
-    return "v1.6"
+    return "v1.7"
