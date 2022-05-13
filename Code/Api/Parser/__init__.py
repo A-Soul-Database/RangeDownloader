@@ -8,6 +8,8 @@ def Parse(url):
         return BiliBili.BiliBili(url)
     elif ("asoul-rec.com" in url) or ("knaifen.workers.dev" in url):
         return Naifen.Naifen(url)
+    elif ("rec.ddindexs.com" in url):
+        return Naifen.DDindex(url)
     elif "youtube.com" or "youtu.be" in url:
         return YouTube.YouTube(url)
     else:

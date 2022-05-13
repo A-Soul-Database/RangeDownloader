@@ -28,7 +28,7 @@ def Naifen(url)->dict:
         url = url.replace("http://","").replace("https://","")
         
     url = unquote(unquote(url))
-    r = requests.get("https://"+url+"?preview",headers={'User-Agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:96.0) Gecko/20100101 Firefox/96.0'}).text
+    r = requests.get("https://"+url+"?preview",headers={'User-Agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:96.0) Gecko/20100101 Firefox/96.0 AsdbRangeDownloader'}).text
     title = url.split('?')[0].split('/')[-1].replace(" ","")
     url ="https://"+ quote(url.split("?")[0]) + "?raw"
 
@@ -43,5 +43,20 @@ def Naifen(url)->dict:
     A.Play_Html=f"<video class='mdui-video-fluid' src='{quote(url)}' controls></video>"
     A.Web_Title = title
     A.Save_Name = title
-    
+    return A
+
+def DDindex(url)->dict:
+    try:
+        url = url.replace("http://","").replace("https://","").split("?")[0]
+    except:
+        url = url.replace("http://","").replace("https://","")
+        
+    #url = unquote(unquote(url))
+    r = requests.get("https://"+url,headers={'User-Agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:96.0) Gecko/20100101 Firefox/96.0 AsdbRangeDownloader'})
+    r.encoding = 'utf-8'
+    title = r.text.split("<title>")[1].split("</title>")[0]
+    A.Save_Name , A.Web_Title = title, title
+    Real_Url = r.text.split("url: '")[1].split("'")[0]
+    A.Play_Html=f"<video class='mdui-video-fluid' src='{Real_Url}' controls></video>"
+    A.Download_Url = Real_Url
     return A

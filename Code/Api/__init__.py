@@ -17,7 +17,7 @@ Api.add_middleware(
 ############ End #############
 
 Extracts = [
-    "bilibili.com","asoul-rec.com","youtube.com","youtu.be","knaifen.workers.dev"
+    "bilibili.com","asoul-rec.com","youtube.com","youtu.be","knaifen.workers.dev","rec.ddindexs.com"
 ]
 
 class Parse_Model(BaseModel):
@@ -70,4 +70,4 @@ def Get_BiliBili_Cookie():
 
 @Api.get('/version')
 def version():
-    return "v1.5"
+    return "v1.6"
