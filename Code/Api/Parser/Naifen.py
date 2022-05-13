@@ -47,11 +47,10 @@ def Naifen(url)->dict:
 
 def DDindex(url)->dict:
     try:
-        url = url.replace("http://","").replace("https://","").split("?")[0]
+        url = url.replace("http://","").replace("https://","").replace('&download=1','')
     except:
         url = url.replace("http://","").replace("https://","")
-        
-    #url = unquote(unquote(url))
+    url = unquote(url)
     r = requests.get("https://"+url,headers={'User-Agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:96.0) Gecko/20100101 Firefox/96.0 AsdbRangeDownloader'})
     r.encoding = 'utf-8'
     title = r.text.split("<title>")[1].split("</title>")[0]
