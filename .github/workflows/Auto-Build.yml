@@ -38,6 +38,6 @@ jobs:
       uses: actions/upload-artifact@v3.1.0
       with:
         # Artifact name
-        name: AutoBuild_App_${{ RUNNER_OS }}
+        name: AutoBuild_App_${{ runner.os }}
         path: Code/dist/
   
