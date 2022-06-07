@@ -29,7 +29,7 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install pyinstaller tinyaes
-        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+        pip install -r requirements.txt
     - name: Test & Compile Excuteable
       run: |
         cd Code && pyinstaller -F app.py -i 1.ico --key asoul
