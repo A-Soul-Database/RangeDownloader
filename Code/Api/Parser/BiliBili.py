@@ -44,7 +44,7 @@ def get_Info(bv,p,sessdata:str="")->dict:
 
 def purify_URL(url:str)->str:
     #提取bv号和p号
-    bv = url.split("/")[-1].split("?")[0]
+    bv = [fn for fn in url.split("/") if "BV" in fn][0]
     try:
         p = dict(urllib.parse.parse_qsl(urllib.parse.urlsplit(url).query))["p"]
     except:

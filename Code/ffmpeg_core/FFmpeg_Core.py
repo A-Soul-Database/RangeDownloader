@@ -9,7 +9,7 @@ import sys
 import shlex
 
 
-def Multi_Thread_Seeking(Start_Time:int,End_Time:int,Url:str,Save_Name:str,Seek_type:str="Input",Threads:int=4,Args:str=""):
+def Multi_Thread_Seeking(Start_Time:int,End_Time:int,Url:str,Save_Name:str,Seek_type:str="Input",Threads:int=1,Args:str=""):
     #   http://trac.ffmpeg.org/wiki/Seeking \n
     #   In the documentation, the following is the format of the seek command:
     #       Input\Output

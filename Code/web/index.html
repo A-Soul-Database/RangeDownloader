@@ -5,8 +5,8 @@
         <meta name="referrer" content="no-referrer">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>Asdb视频片段下载</title>
-        <script src="https://cdn.jsdelivr.net/npm/mdui@1.0.2/dist/js/mdui.min.js"></script>
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/mdui@1.0.2/dist/css/mdui.min.css"/>
+        <script src="./mdui.min.js"></script>
+        <link rel="stylesheet" href="./mdui.min.css"/>
         <script src="./global.js"></script>
     </head>
     <body class="mdui-theme-layout-auto" onload="init()">
@@ -15,7 +15,6 @@
               <div href="javascript:;" class="mdui-typo-headline">视频分段下载 🎞</div>
               <div href="javascript:;" class="mdui-typo-title"><span onclick="window.location.href='https://asdb.live'">By Asdb</span> <span onclick="snackbar('6I2JLOi1sCzlv73nlaU=')">🤸‍♀️</span></div>
               <div class="mdui-toolbar-spacer"></div>
-                <img class="mdui-img-circle mdui-btn mdui-btn-icon mdui-ripple" mdui-tooltip="{content: '阿草模式'}" src="1.ico" onclick="Acao_Mode()">
               <a href="javascript:;" class="mdui-btn mdui-btn-icon mdui-ripple" mdui-tooltip="{content: '下载列表'}" onclick="Download_List_Dialog.open();get_download_info()">
                 <i class="mdui-icon material-icons">arrow_downward</i>
               </a>
@@ -26,9 +25,12 @@
         </div>
     <div  style="text-align: center;" class="mdui-typo">
         <div id="ffmpeg-page" class="web-container mdui-container" style="width: 80%;margin: auto;margin-top: 2rem;left: 0;right: 0;top: 0;bottom: 0;display: none;">
-            <h3 style="margin-top: 5rem;">正在下载必要依赖</h3>
-            <h5 style="float: right;">(约~80Mb)</h5>
-            <div class="mdui-progress"><div class="mdui-progress-determinate" id="progress_bar" style="width: 0%;"></div></div>
+            <div id="Windows">
+                <h3 style="margin-top: 5rem;">正在下载必要依赖</h3>
+                <h5 style="float: right;">(约~80Mb)</h5>
+                <div class="mdui-progress"><div class="mdui-progress-determinate" id="progress_bar" style="width: 0%;"></div></div>
+                <p style="font-weight: 400;">对于Linux用户,请自行前往包管理器安装编译过的ffmpeg版本并刷新页面</p>
+            </div>
         </div>
 
         <div id="main-page" class="web-container mdui-container" style="width: 80%;margin: auto;margin-top: 2rem;left: 0;right: 0;top: 0;bottom: 0;display: block;">
@@ -71,18 +73,11 @@
         
         <div class="mdui-dialog" id="global_dialog"></div>
 
-        <div class="mdui-dialog" id="A_cao_dialog">
-            <div class="mdui-dialog-title">阿草啊,你又在挖矿</div>
-            <div class="mdui-dialog-content">休息一下,发个切片好不好</div>
-            <div class="mdui-dialog-actions">
-                <button class="mdui-btn mdui-ripple" mdui-dialog-cancel onclick="A_Cao=!A_Cao">烦内</button>
-            </div>
-        </div>
 
         <div class="mdui-dialog" id="Download-List-dialog" style="min-height: 15rem;">
             <div class="mdui-dialog-content">
                 <ul class="mdui-list" id="Download-List-Content">
-                    此处招商<p>@A-Soul Official</p>还没有任何下载任务捏
+                    还没有任何下载任务
                 </ul>
             </div>
             <div class="mdui-dialog-actions">
@@ -92,8 +87,8 @@
 
         <div class="mdui-dialog" id="Setting_Dialog"><div class="mdui-dialog-content">
             <ul class="mdui-list">
-                <button class="mdui-btn mdui-btn-raised mdui-ripple mdui-color-orange" onclick="window.location.href='https://ghproxy.com/https://github.com/A-Soul-Database/RangeDownloader/releases/download/V1.4/app.exe'">本地服务下载</button>
-                <div class="mdui-typo-caption-opacity">片段下载需要依托本地端口服务,若您没有下载,可以点击下方链接下载,之后刷新网页即可,对于Mac/Linux用户可以自行编译或源码运行</div>
+                <button class="mdui-btn mdui-btn-raised mdui-ripple mdui-color-orange" onclick="window.location.href='https://ghproxy.com/https://github.com/A-Soul-Database/RangeDownloader/releases/download/V1.8/app.exe'">本地服务下载</button>
+                <div class="mdui-typo-caption-opacity">片段下载需要依托本地端口服务,Linux用户可以自行编译或源码运行</div>
                 <li class="mdui-list-item mdui-ripple">
                     <i class="mdui-icon material-icons">playlist_play</i>
                   <div class="mdui-list-item-content">多线程加载</div>
@@ -157,19 +152,12 @@
             };
             setInterval(() => {
                 if(Download_List_Dialog.state==="opened"){get_download_info();}
-            }, 1000);
+            }, 100);
             setInterval(async()=>{
                 if(!await heartbeat()){
                     snackbar("本地服务连接失败，请检查服务是否正常启动");
                     Setting();
                 }
             },10000)
-
-            setInterval(()=>{
-                if(A_Cao){
-                    snackbar("小--伙---伴----! 对不起!!!!!!🙇‍♂️🙇‍♀️🙇‍♀️产能不足!");
-                }
-            },10000)
-
         </script>
     </body>

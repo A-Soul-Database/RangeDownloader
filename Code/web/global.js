@@ -81,16 +81,6 @@ async function init(){
     });
     snackbar("服务正常");
 
-    //检查更新
-    if(await (await (await fetch(`${Config.ffmpeg_api}/version`)).text()).replace(/"/g,"") !== latest_version.ffmpeg || await (await (await fetch(`${Config.Parse_api}/version`)).text()).replace(/"/g,"") !== latest_version.parse){
-        mdui.snackbar({
-            message:"有新版本捏,点此更新",
-            buttonText:"忽略",
-            onClick:function(){
-                window.open(latest_version.url);
-            },
-        });
-    }
     //read config from cookie
     if(getCookie("Config")){Config = JSON.parse(getCookie("Config"))}
     get_bilibili_cookie();
