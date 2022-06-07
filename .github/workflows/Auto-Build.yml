@@ -13,9 +13,11 @@ permissions:
   contents: read
 
 jobs:
-  build-Linux:
-
-    runs-on: [ubuntu-latest , macos-latest , windows-latest]
+  build-Apps:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macOS-latest]
+    runs-on: ${{ matrix.os }}
 
     steps:
     - uses: actions/checkout@v3
