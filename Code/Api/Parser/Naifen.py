@@ -1,8 +1,10 @@
 from urllib.parse import quote, unquote
 import requests
+
+header = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:96.0) Gecko/20100101 Firefox/96.0 AsdbRangeDownloaderv1'
 class Parser():
     Url:str
-    Args:str
+    Args:str = f' -user_agent "User-Agent: {header}" '
     Download_Url:str
     Play_Html:str
     Web_Title:str
@@ -28,7 +30,7 @@ def Naifen(url)->dict:
         url = url.replace("http://","").replace("https://","")
         
     url = unquote(unquote(url))
-    r = requests.get("https://"+url+"?preview",headers={'User-Agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:96.0) Gecko/20100101 Firefox/96.0 AsdbRangeDownloader'}).text
+    r = requests.get("https://"+url+"?preview",headers={'User-Agent':header}).text
     title = url.split('?')[0].split('/')[-1].replace(" ","")
     url ="https://"+ quote(url.split("?")[0]) + "?raw"
 
@@ -47,15 +49,16 @@ def Naifen(url)->dict:
 
 def DDindex(url)->dict:
     try:
-        url = url.replace("http://","").replace("https://","").replace('&download=1','')
+        url = url.replace("https://","").replace("http://","").replace('&download=1','')
     except:
-        url = url.replace("http://","").replace("https://","")
+        url = url.replace("https://","").replace("http://","")
     url = unquote(url)
-    r = requests.get("https://"+url,headers={'User-Agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:96.0) Gecko/20100101 Firefox/96.0 AsdbRangeDownloader'})
+    r = requests.get(f"https://{url}",headers={"User-Agent":header},proxies={"http":"http://127.0.0.1:7890",
+        "https":"http://127.0.0.1:7890"})
     r.encoding = 'utf-8'
     title = r.text.split("<title>")[1].split("</title>")[0]
     A.Save_Name , A.Web_Title = title, title
-    Real_Url = r.text.split("url: '")[1].split("'")[0]
+    Real_Url = r.text.replace(" ","").split('art.url="')[1].split('"')[0]
     A.Play_Html=f"<video class='mdui-video-fluid' src='{Real_Url}' controls></video>"
     A.Download_Url = Real_Url
     return A

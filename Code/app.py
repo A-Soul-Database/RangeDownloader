@@ -1,5 +1,5 @@
 # *-* coding:utf-8 -*-
-APPVERSION = "V1.8"
+APPVERSION = "V1.9"
 import webbrowser
 import requests
 import uvicorn
@@ -17,6 +17,8 @@ def Check_Update():
         latest_tag,release_body = release_info["tag_name"] , release_info["body"]
         if latest_tag != APPVERSION:
             return (tkinter.messagebox.askokcancel(title="版本更新", message=f"小伙伴你好,Asdb分段下载有更新了!\n更新日志: {release_body}\n 点击 “确定” 跳转更新\n点击 “取消” 忽略"),release_info["assets"][0]["browser_download_url"])
+        else:
+            return (False , "")
     except Exception as e:
         print(f"Check Latest Version Failed {e}")
         return (False, "")

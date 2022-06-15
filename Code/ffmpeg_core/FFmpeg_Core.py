@@ -46,8 +46,8 @@ def Multi_Thread_Seeking(Start_Time:int,End_Time:int,Url:str,Save_Name:str,Seek_
         if Threads>1:
             #One thread dont need this
             if Progress[Uniq_ID][0]["Running"]!=4:
-                open(f"{Uniq_ID}.txt","w",encoding="utf-8").write("\n".join([f"file '{i}_{Uniq_ID}.mp4'" for i in range(Threads)]))
-                subprocess.call(f'ffmpeg -f concat -i {Uniq_ID}.txt -c copy "{Save_Name}.mp4"',shell=True)
+                open(f"{Uniq_ID}.txt","w",encoding="utf-8").write("\n".join([f'file {i}_{Uniq_ID}.mp4' for i in range(Threads)]))
+                subprocess.call(f'ffmpeg -f concat -safe 0 -i {Uniq_ID}.txt -c copy "{Save_Name}.mp4"',shell=True)
                 os.remove(f"{Uniq_ID}.txt")
             # Delete Files
             for i in range(Threads):
