@@ -53,8 +53,7 @@ def DDindex(url)->dict:
     except:
         url = url.replace("https://","").replace("http://","")
     url = unquote(url)
-    r = requests.get(f"https://{url}",headers={"User-Agent":header},proxies={"http":"http://127.0.0.1:7890",
-        "https":"http://127.0.0.1:7890"})
+    r = requests.get(f"https://{url}",headers={"User-Agent":header})
     r.encoding = 'utf-8'
     title = r.text.split("<title>")[1].split("</title>")[0]
     A.Save_Name , A.Web_Title = title, title
