@@ -33,7 +33,8 @@ Update = Check_Update()
 if Update[0]:
     webbrowser.open(Update[1].replace("github.com","hub.fastgit.xyz"))
 else:
-    webbrowser.open("https://livedb.asoulfan.com/rangeDownload/index.html")
+    webbrowser.open("https://rd.asdb.live")
+    webbrowser.open("https://asdb.live")
 print("服务已启动")
 while True:
     try:
