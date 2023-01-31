@@ -1,5 +1,5 @@
 # *-* coding:utf-8 -*-
-APPVERSION = "V2.1"
+APPVERSION = "V2.2"
 import webbrowser
 import requests
 import uvicorn
