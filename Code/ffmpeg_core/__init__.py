@@ -4,7 +4,7 @@ from pydantic import BaseModel
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 import os
-
+import uuid
 FFmpeg_api = FastAPI()
 origins = ["https://livedb.asoulfan.com","http://localhost","*"]
 FFmpeg_api.add_middleware(
@@ -18,11 +18,12 @@ FFmpeg_api.add_middleware(
 class Seek(BaseModel):
     Start_Time:int
     End_Time:int
-    Url:str
+    Url: str | dict
     Save_Name:str
     Seek_type:str="Input"
     Threads:int=4
     Args:str=""
+    Dash:bool
 
 @FFmpeg_api.get("/ping")
 def ping():
@@ -38,8 +39,12 @@ def b():
 
 @FFmpeg_api.post("/Seek")
 def c(Seek_Item:Seek):
-    return FFmpeg_Core.Multi_Thread_Seeking(Start_Time=Seek_Item.Start_Time,End_Time=Seek_Item.End_Time,
-    Url=Seek_Item.Url,Save_Name=Seek_Item.Save_Name,Seek_type=Seek_Item.Seek_type,Threads=Seek_Item.Threads,Args=Seek_Item.Args)
+    if Seek_Item.Dash == True:
+        return FFmpeg_Core.Dash_Operation(Start_Time=Seek_Item.Start_Time,End_Time=Seek_Item.End_Time,
+        Url=Seek_Item.Url,Save_Name=Seek_Item.Save_Name,Seek_type=Seek_Item.Seek_type,Threads=Seek_Item.Threads,Args=Seek_Item.Args)
+    else:
+        return FFmpeg_Core.Multi_Thread_Seeking(Start_Time=Seek_Item.Start_Time,End_Time=Seek_Item.End_Time,
+        Url=Seek_Item.Url,Save_Name=Seek_Item.Save_Name,Seek_type=Seek_Item.Seek_type,Threads=Seek_Item.Threads,Args=Seek_Item.Args,Uniq_ID=str(uuid.uuid1()))
 
 @FFmpeg_api.get("/Progress")
 def d():

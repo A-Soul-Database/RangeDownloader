@@ -7,11 +7,11 @@
         <link rel="preconnect" href="https://fonts.gstatic.com">
         <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
         <title>Asdb视频片段下载</title>
-        <script src="./mdui.min.js"></script>
-        <link rel="stylesheet" href="./mdui.min.css"/>
+        <link rel="stylesheet" href="https://unpkg.com/mdui@1.0.2/dist/css/mdui.min.css"/>
         <script src="./global.js"></script>
     </head>
     <body class="mdui-theme-layout-auto" onload="init()">
+        <script src="https://unpkg.com/mdui@1.0.2/dist/js/mdui.min.js"></script>
         <div class="mdui-appbar">
             <div class="mdui-toolbar mdui-color-theme">
               <div href="javascript:;" class="mdui-typo-headline">视频分段下载 🎞</div>
@@ -140,11 +140,6 @@
             var Parse;
             var Download_Progress;
             var Finished_List = [];
-            const latest_version = {
-                ffmpeg:"v1.5",
-                parse:"v1.5",
-                url:"https://ghproxy.com/https://github.com/A-Soul-Database/RangeDownloader/releases/download/V1.5/app.exe",
-            }
             const Config = {
                 ffmpeg_api:"http://localhost:4399",
                 Parse_api:"http://localhost:4400",

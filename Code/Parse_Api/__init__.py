@@ -32,33 +32,32 @@ class Parse_Template():
     Save_Name:str
     Video_Format:str="mp4"
     Download_Tool:str="ffmpeg"
-A = Parse_Template()
-
+    Dash : bool = False
+    
 @Api.get("/ping")
 def ping():
     return "Parse_Api pong"
 
 
 @Api.post("/Parse")
-def Parse(Parse_Model_Url:Parse_Model)->Parse_Template:
+def Parse(Parse_Model_Url:Parse_Model):
     url = Parse_Model_Url.url
-    global A
-    A.Url = url
+    Temp = Parse_Template()
+    Temp.Url = url
     Special = False
     for item in Extracts:
         if item in url:
             Special = True
-            A = Ps.Parse(url)
+            Temp = Ps.Parse(url)
     if Special==False:
-        A.Download_Url= url
-        A.Play_Html = f"<video src='{url}' controls></video>"
-        A.Web_Title = url.split("/")[-1].replace("?","").replace(" ","")
-        A.Save_Name = url.split("/")[-1].replace("?","").replace(" ","")
-
-    A.Download_Url = unquote(A.Download_Url)
-    A.Play_Html = unquote(A.Play_Html)
-    A.Save_Name = unquote(A.Save_Name)
-    return A
+        Temp.Download_Url= url
+        Temp.Play_Html = f"<video src='{url}' controls></video>"
+        Temp.Web_Title = url.split("/")[-1].replace("?","").replace(" ","")
+        Temp.Save_Name = url.split("/")[-1].replace("?","").replace(" ","")
+    #Temp.Download_Url = unquote(Temp.Download_Url)
+    Temp.Play_Html = unquote(Temp.Play_Html)
+    Temp.Save_Name = unquote(Temp.Save_Name)
+    return Temp
 
 @Api.get("/Save_BiliBili_Cookie/{cookie:path}")
 def Save_BiliBili_Cookie(Cookie:str):

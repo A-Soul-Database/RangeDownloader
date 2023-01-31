@@ -2,3 +2,5 @@ psutil
 fastapi
 uvicorn
 requests
+shutil
+uuid

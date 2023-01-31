@@ -11,6 +11,7 @@ class Parser():
     Save_Name:str
     Video_Format:str
     Download_Tool:str
+    Dash: bool = False
 
 A = Parser()
 A.Download_Tool = "ffmpeg"
@@ -40,8 +41,15 @@ def get_Info(bv,p,sessdata:str="")->dict:
     A.Web_Title = Bili_Video_Info_Json["data"]["title"]
     Play_Html= requests.get(f"https://api.bilibili.com/x/player/playurl?bvid={bv}&cid={cid}&otype=json&&platform=html5&high_quality=1",headers=headers,cookies=Cookie).json()["data"]["durl"][0]["url"]
     A.Play_Html = f"<video class='mdui-video-fluid' src='{Play_Html}' controls></video>"
-    A.Download_Url =  Play_Html if sessdata =="" else requests.get(f'https://api.bilibili.com/x/player/playurl?bvid={bv}&cid={cid}&otype=json&fourk=1&qn=120',headers=headers,cookies=Cookie).json()["data"]["durl"][0]["url"]
-
+    if sessdata == "": A.Download_Url = Play_Html
+    else:
+        Resp = requests.get(f'https://api.bilibili.com/x/player/playurl?bvid={bv}&cid={cid}&otype=json&fourk=1&qn=120&fnval=16',headers=headers,cookies=Cookie).json()
+        A.Dash = True
+        A.Download_Url = {
+            "Video":Resp["data"]["dash"]["video"][0]["baseUrl"],
+            "Audio":Resp["data"]["dash"]["audio"][0]["baseUrl"]
+        }
+    
 def purify_URL(url:str)->str:
     #提取bv号和p号
     bv = [fn for fn in url.split("/") if "BV" in fn][0].split("?")[0]

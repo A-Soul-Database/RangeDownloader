@@ -226,6 +226,7 @@ function apply_download(){
         },
         body : JSON.stringify({
             "Url": Parse.Download_Url,
+            "Dash":Parse.Dash,
             "Start_Time": start_time,
             "End_Time": end_time,
             "Save_Name": `${Parse.Save_Name}_${start_time}_${end_time}`,

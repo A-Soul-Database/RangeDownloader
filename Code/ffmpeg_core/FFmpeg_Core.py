@@ -7,14 +7,14 @@ import time
 import psutil
 import sys
 import shlex
+import uuid
+import shutil
 
-
-def Multi_Thread_Seeking(Start_Time:int,End_Time:int,Url:str,Save_Name:str,Seek_type:str="Input",Threads:int=1,Args:str=""):
+def Multi_Thread_Seeking(Start_Time:int,End_Time:int,Url:str,Save_Name:str,Uniq_ID:str,Seek_type:str="Input",Threads:int=1,Args:str="",filetype:str="video",filesuffix:str="mp4",Dash:bool=False):
     #   http://trac.ffmpeg.org/wiki/Seeking \n
     #   In the documentation, the following is the format of the seek command:
     #       Input\Output
     Save_Name = shlex.quote(Save_Name) # Issue3
-    Uniq_ID = str(hash(Url)) # Generate a id ,To Prevent File Overwrite
     Progress.update({Uniq_ID:{}})
     Progress[Uniq_ID]["Save_Name"] = Save_Name
     def test():
@@ -24,15 +24,18 @@ def Multi_Thread_Seeking(Start_Time:int,End_Time:int,Url:str,Save_Name:str,Seek_
         start_time = Start_Time
         for i in range(Threads):
             end_time = start_time + Each_Duration
+            _k = ""
+            if Dash == False: _k = " -avoid_negative_ts 1 "
             if Seek_type.lower()=="input":
-                cmd =f'ffmpeg  {Args} -i "{Url}" -to {end_time} -avoid_negative_ts 1 -c copy "{i}_{Uniq_ID}.mp4" -y 2>&1' if start_time==0 else f'ffmpeg  {Args} -ss {start_time} -i "{Url}" -to {end_time-start_time} -avoid_negative_ts 1 -c copy "{i}_{Uniq_ID}.mp4" -y 2>&1'
+                # Removed "-avoid_negative_ts 1", in dash it will occur dismatch of audio and video / but will occur other problems
+                cmd =f'ffmpeg  {Args} -i "{Url}" -to {end_time} -avoid_negative_ts 1 -c copy "{i}_{Uniq_ID}.{filesuffix}" -y 2>&1' if start_time==0 else f'ffmpeg  {Args} -ss {start_time} -i "{Url}" -to {end_time-start_time} {_k} -c copy "{i}_{Uniq_ID}.{filesuffix}" -y 2>&1'
             elif Seek_type.lower() == "output":
-                cmd = f'ffmpeg  {Args} -i "{Url}" -to {end_time} -avoid_negative_ts 1 -c copy "{i}_{Uniq_ID}.mp4" -y 2>&1' if start_time==0 else f'ffmpeg  {Args} -ss {start_time} -i "{Url}" -to {end_time} -avoid_negative_ts 1 -c copy "{i}_{Uniq_ID}.mp4" -y 2>&1'
+                cmd = f'ffmpeg  {Args} -i "{Url}" -to {end_time} -avoid_negative_ts 1 -c copy "{i}_{Uniq_ID}.{filesuffix}" -y 2>&1' if start_time==0 else f'ffmpeg  {Args} -ss {start_time} -i "{Url}" -to {end_time} {_k} -c copy "{i}_{Uniq_ID}.{filesuffix}" -y 2>&1'
             Commands.append(cmd)
             start_time = end_time
         # Run Commands
         for i in range(Threads):
-            Progress[Uniq_ID].update({i:{}}) 
+            Progress[Uniq_ID].update({i:{}})
             #Initialize Dictionary
             Progress[Uniq_ID][i]["Running"] = 1
             Working_Threads.append(Thread(target=evaule_command,args=(Commands[i],i,Uniq_ID,Each_Duration)))
@@ -41,25 +44,37 @@ def Multi_Thread_Seeking(Start_Time:int,End_Time:int,Url:str,Save_Name:str,Seek_
         for i in range(Threads):
             Working_Threads[i].start()
         for i in range(Threads):
-            Working_Threads[i].join() 
+            Working_Threads[i].join()
         # Merge Files
         if Threads>1:
             #One thread dont need this
             if Progress[Uniq_ID][0]["Running"]!=4:
-                open(f"{Uniq_ID}.txt","w",encoding="utf-8").write("\n".join([f'file {i}_{Uniq_ID}.mp4' for i in range(Threads)]))
-                subprocess.call(f'ffmpeg -f concat -safe 0 -i {Uniq_ID}.txt -c copy "{Save_Name}.mp4"',shell=True)
+                open(f"{Uniq_ID}.txt","w",encoding="utf-8").write("\n".join([f'file {i}_{Uniq_ID}.{filesuffix}' for i in range(Threads)]))
+                subprocess.call(f'ffmpeg -f concat -safe 0 -i {Uniq_ID}.txt -c copy "{Save_Name}_{filetype}.{filesuffix}"',shell=True)
                 os.remove(f"{Uniq_ID}.txt")
             # Delete Files
             for i in range(Threads):
-                pass
-                os.remove(f"{i}_{Uniq_ID}.mp4")
+                os.remove(f"{i}_{Uniq_ID}.{filesuffix}")
         elif Threads ==1 :
-            os.rename(f"0_{Uniq_ID}.mp4",f"{Save_Name}.mp4")
+            #os.rename(f"0_{Uniq_ID}.{filesuffix}",f"{Save_Name}_{filetype}.{filesuffix}")
+            shutil.move(f"0_{Uniq_ID}.{filesuffix}",f"{Save_Name}_{filetype}.{filesuffix}") # Same As Rename
         return True
 
     Thread(target=test).start()
     return Uniq_ID
 
+def Dash_Operation(Start_Time:int,End_Time:int,Url:dict,Save_Name:str,Seek_type:str="Input",Threads:int=1,Args:str=""):
+    # Step1: Download Video Part
+    Multi_Thread_Seeking(Start_Time=Start_Time,End_Time=End_Time,Save_Name=Save_Name,Seek_type=Seek_type,Threads=Threads,Args=Args,Url=Url["Video"],Uniq_ID=str(uuid.uuid1()),Dash=True)
+    # Step2: Download Audio Part
+    Multi_Thread_Seeking(Start_Time=Start_Time,End_Time=End_Time,Save_Name=Save_Name,Seek_type=Seek_type,Threads=Threads,Args=Args,Url=Url["Audio"],Uniq_ID=str(uuid.uuid1()),filetype="audio",Dash=True)
+    # Step3: Combine Two Parts
+    # Wait Unitl Preload finish
+    while os.path.exists(f"./{Save_Name}_video.mp4") == False or os.path.exists(f"./{Save_Name}_audio.mp4") == False: time.sleep(0.5)
+    print(os.path.exists(f"./{Save_Name}_video.mp4"),os.path.exists(f"./{Save_Name}_audio.mp4"))
+    subprocess.call(f'ffmpeg -y -i {Save_Name}_video.mp4 -i {Save_Name}_audio.mp4 -c:v copy -c:a copy -f mp4 {Save_Name}.mp4',shell=True,stdin=subprocess.PIPE,stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT)
+    return True
 
 def evaule_command(Command:str,Instance_id:int,Uniq_ID:str,Duration:int):
     # Instance_id: Thread_Id
