@@ -23,7 +23,7 @@ class Seek(BaseModel):
     Seek_type:str="Input"
     Threads:int=4
     Args:str=""
-    Dash:bool
+    Dash:bool=False
 
 @FFmpeg_api.get("/ping")
 def ping():

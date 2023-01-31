@@ -27,7 +27,6 @@ def BiliBili(url:str)->dict:
 
 def get_Info(bv,p,sessdata:str="")->dict:
     #通过bv号和p号获取视频信息
-    global A
     headers = {
     "User-Agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:93.0) Gecko/20100101 Firefox/93.0",
     "Referer":"https://www.bilibili.com/",

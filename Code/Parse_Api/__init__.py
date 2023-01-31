@@ -48,6 +48,7 @@ def Parse(Parse_Model_Url:Parse_Model):
     for item in Extracts:
         if item in url:
             Special = True
+            del Temp
             Temp = Ps.Parse(url)
     if Special==False:
         Temp.Download_Url= url
