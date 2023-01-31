@@ -21,7 +21,7 @@ def Check_Update():
             return False
     except Exception as e:
         print(f"Check Latest Version Failed {e}")
-        return (False, "")
+        return False
 
 
 ## Start Two Serivices
