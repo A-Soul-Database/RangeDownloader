@@ -1,5 +1,5 @@
 # *-* coding:utf-8 -*-
-APPVERSION = "V2.2.2" # Semantic Versioning
+APPVERSION = "V2.2.3" # Semantic Versioning
 import webbrowser
 import requests
 import uvicorn
