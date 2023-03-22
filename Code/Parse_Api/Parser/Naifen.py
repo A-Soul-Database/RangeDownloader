@@ -52,12 +52,16 @@ def DDindex(url)->dict:
         url = url.replace("https://","").replace("http://","").replace('&download=1','')
     except:
         url = url.replace("https://","").replace("http://","")
-    url = unquote(url)
+    
+    url = unquote(unquote(url))
     r = requests.get(f"https://{url}",headers={"User-Agent":header})
     r.encoding = 'utf-8'
-    title = r.text.split("<title>")[1].split("</title>")[0]
+    pas = "一百八一杯"
+    path = url.split("ddindexs.com")[1]
+    info = requests.post("https://alist.ddindexs.com/api/fs/get",data={"password":pas,"path":path},headers={"User-Agent":header}).json()
+    title = info["data"]["name"]
     A.Save_Name , A.Web_Title = title, title
-    Real_Url = r.text.replace(" ","").split('art.url="')[1].split('"')[0]
+    Real_Url = info["data"]["raw_url"]
     A.Play_Html=f"<video class='mdui-video-fluid' src='{Real_Url}' controls></video>"
     A.Download_Url = Real_Url
     return A

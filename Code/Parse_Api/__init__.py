@@ -17,7 +17,7 @@ Api.add_middleware(
 ############ End #############
 
 Extracts = [
-    "bilibili.com","asoul-rec.com","youtube.com","youtu.be","knaifen.workers.dev","rec.ddindexs.com"
+    "bilibili.com","asoul-rec.com","knaifen.workers.dev","rec.ddindexs.com","alist.ddindexs.com"
 ]
 
 class Parse_Model(BaseModel):
